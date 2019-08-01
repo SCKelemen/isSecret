@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"fmt"
 
+	"github.com/hashicorp/vault/api"
+
 	"github.com/seiflotfy/cuckoofilter"
 )
 
@@ -65,5 +67,30 @@ func initializeEnvironments() map[Environment]*cuckoo.Filter {
 	for i := 0; i < int(DEVELOPMENT); i++ {
 		envs[Environment(i)] = cuckoo.NewFilter(1000)
 	}
+
 	return envs
 }
+
+func contactVault() (*api.Client, error) {
+	client, err := api.NewClient(&api.Config{
+		Address: "127.0.0.1",
+	})
+	return client, err
+
+}
+
+type Info struct {
+	Name    string
+	Address string
+	Token   string
+	Filter  string
+}
+
+/*
+
+---
+bluesteel:
+	address: "127.0.0.1"
+	token: "token"
+
+*/
